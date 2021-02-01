@@ -1,0 +1,36 @@
+* Game Story Syntax
+** Nodes
+First will be node number, which has to be unique integer.
+Node number 0 is reserved for exit.
+** Images
+If image is to be change keep the image location inside <>.
+** Story Text
+Write the texts normally you can also have newline characters. But not in the action texts.
+Any consecutive white spaces will be ignored. Feel free to use them to manage the story syntax.
+** Dynamic Text
+You can have dynamic texts like character names and such. use them inside {}.
+If you want to specify the user to enter the dynamic variable enter it with $ character. inside braces {}.
+** Delay
+If you want delay between the texts insert number between [] like in the example below.
+The unit for delay is in milliseconds.
+You can also use this to show a series of multiple images.
+** Choices
+Write the node number it should go now inside ().
+Write choices with () and text can have multiple paths available.
+Whether it is single or multiple the user is asked to choose/continue.
+** Ending lines
+Newline character will end the node when there are already actions. If the newline is found before any actions then it is just considered part of the text and has no effect.
+
+* Game Story Example Lines
+1-<welcome-image.png>Open the game.[1000]choose action:(2)load history.(3)new game.(4)exit
+4-Exiting...(0)Confirm exit.
+3-Welcome.. May I know your name?{$PLAYER_NAME}(5)
+
+* TODOs
+** Make a parser for the game.
+** Make a storyline checking program (for dangling endpoints).
+** Make it generate compiled code from the story if possible.
+
+* Future plans
+- Add sound effects (parallel execution)
+

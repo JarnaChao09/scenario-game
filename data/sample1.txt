@@ -1,0 +1,3 @@
+1-<welcome-image.png>Open the game.\[1000\]choose action:(2)load history.(3)new game.(4)exit
+2-How are you?(3)
+3-Bye Bye.(0)
