@@ -19,19 +19,23 @@ You can also use this to show a series of multiple images.
 ** Choices
 Write the node number it should go now inside ().
 Write choices with () and text can have multiple paths available.
+All choices should be written in a single line.
 Whether it is single or multiple the user is asked to choose/continue.
 ** Ending lines
-Newline character will end the node when there are already actions. If the newline is found before any actions then it is just considered part of the text and has no effect.
+Newline character will end the node when actions has been detected. If the newline is found before any actions then it is just considered part of the text and has no effect.
+
+Also you can't break the lines between the actions, as it will consider the node to be finished when it reads a action on a line.
 
 * Game Story Example Lines
+The examples are inside the data directory.
+#+begin_verse
 1-<welcome-image.png>Open the game.[1000]choose action:(2)load history.(3)new game.(4)exit
 4-Exiting...(0)Confirm exit.
 3-Welcome.. May I know your name?{$PLAYER_NAME}(5)
-
+#+end_verse
 * TODOs
-** Make a parser for the game.
-** Make a storyline checking program (for dangling endpoints).
-** Make it generate compiled code from the story if possible.
+- Make a storyline checking program (for dangling endpoints).
+- Make it generate compiled code from the story if possible.
 
 * Future plans
 - Add sound effects (parallel execution)

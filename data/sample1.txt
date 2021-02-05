@@ -1,5 +1,8 @@
-1-<welcome-image.png>Welcome to the game.[1000]
-			     Choose action:(2)Continue(0)Exit
+1-	<welcome-image.png>
+	Welcome to the game.
+	[1000]
+	Choose action:
+	       (2)Continue(0)Exit
 2-के छ, खबर? (3)thik xa(4)birami \#xu
 3-Nice, Anyway I got to go.(5)
 4-get well soon.(0)
