@@ -121,7 +121,7 @@ int read_node(char *buffer, int *point, int buff_len, Node *n) {
   char *c, *end;
   c = buffer + *point;
   end = buffer + buff_len - 1;
-  /* int flag_loop=1; */
+  int skip_flag=0;
   while (1) {
     if (c > end)
       return 0;
@@ -133,15 +133,37 @@ int read_node(char *buffer, int *point, int buff_len, Node *n) {
       c++;
       break;
     case '#':
-      while (*c++ != '\n')
-        ;
+      if (!skip_flag) while (*c++ != '\n')
+			;
+      break;
+    case '\\':
+      if (!skip_flag){
+	skip_flag = 1;
+        continue;
+      }
       break;
     case '0' ... '9':
       c += read_number(c, &n->index);
       if (*c == '-') {
         n->text_start = c + 1;
-        while (*(++c) != '\n')
-          ;
+	int action_flag = 0, skip_flag=0, loop_flag=1;
+        while (loop_flag){
+	  switch(*(++c)){
+	  case '\\':
+	    if (!skip_flag){
+	      skip_flag = 1;
+	      continue;
+	    }
+	    break;
+	  case '(':
+	    if (!skip_flag) action_flag=1;
+	    break;
+	  case '\n':
+	    if (action_flag) loop_flag=0;
+	    break;
+	  }
+	  skip_flag = 0;
+	}
         n->text_end = c - 1;
         *point = c - buffer;
         return 1;
@@ -152,6 +174,7 @@ int read_node(char *buffer, int *point, int buff_len, Node *n) {
       print_between(buffer + *point, c);
       exit_gracefully(1);
     }
+    skip_flag = 0;
   }
 }
 
@@ -159,7 +182,7 @@ int read_action(char *buffer_start, int *point, char *buffer_end, Action *a) {
   char *buff_pt = buffer_start + *point;
   char end_char = '(';
   enum action_type action_flag;
-  while (*buff_pt == ' ' || *buff_pt == '\t')
+  while (*buff_pt == ' ' || *buff_pt == '\t' || *buff_pt == '\n')
     buff_pt++;
   switch (*buff_pt) {
   case '<':
@@ -238,7 +261,7 @@ int read_choice(char *buffer_start, int *point, char *buffer_end, Choice *c){
     *point = buff_pt - buffer_start;
     return 1;
   }
-  int loop_flag=1;
+  int loop_flag=1, skip_flag=0;
   while(loop_flag){
     if (buff_pt >=buffer_end){
       c->text_end = buff_pt;
@@ -248,6 +271,21 @@ int read_choice(char *buffer_start, int *point, char *buffer_end, Choice *c){
     case ' ':
     case '\t':
       break;
+    case '\\':
+      if (!skip_flag) {
+	skip_flag = 1;
+	buff_pt++;
+	continue;
+      }
+      break;
+    case '#':
+      if (!skip_flag) {
+	c->text_end = --buff_pt;
+	while( *(++buff_pt) != '\n')
+	  ;
+	loop_flag = 0;
+      }
+      break;
     case '(':
     case '\n':
       c->text_end = --buff_pt;
@@ -256,6 +294,7 @@ int read_choice(char *buffer_start, int *point, char *buffer_end, Choice *c){
     default:
       break;
     }
+    skip_flag = 0;
     buff_pt++;
   }
   *point = buff_pt - buffer_start;
@@ -263,15 +302,29 @@ int read_choice(char *buffer_start, int *point, char *buffer_end, Choice *c){
 }
 
 void print_between(char *start, char *end) {
-  if (end == NULL || start>end){
+  if (end == NULL || start > end){
     printf("\111[31mNULL\111[0m");
+    return;
   }
+  int whitespace_flag=0;
   while (start <= end) {
     if (*start == '\\'){
       start++;
       continue;
     }
-    putc(*start++, stdout);
+    switch (*start){
+    case '\n':
+    case ' ':
+    case '\t':
+      if (whitespace_flag) break;
+      whitespace_flag = 1;
+      putc(' ', stdout);
+      break;
+    default:
+      putc(*start, stdout);
+      whitespace_flag = 0;
+    }
+    start++;
   }
 }
 
@@ -303,13 +356,13 @@ void print_action(Action *a) {
     printf("AUDIO");
     break;
   }
-  printf(" ");
+  printf(" value=");
   print_between(a->text_start, a->text_end);
   printf("\n");
 }
 
 void print_choice(Choice *c){
-  printf("CHOICE: Target=%d Text=", c->target);
+  printf("\tCHOICE: Target=%d Text=", c->target);
   print_between(c->text_start, c->text_end);
   printf("\n");
 }
@@ -340,7 +393,7 @@ void node_to_event(Node *n, Event *e) {
   }
   e->choices = malloc(e->choices_count * sizeof(Choice));
   i = i2;
-  for (count=0; count < e->actions_count; count++){
+  for (count=0; count < e->choices_count; count++){
     read_choice(n->text_start, &i, n->text_end, e->choices+count);
   }
 }

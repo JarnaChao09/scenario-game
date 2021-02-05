@@ -1,3 +1,6 @@
-1-<welcome-image.png>Open the game.\[1000\]choose action:(2)load history.(3)new game.(4)exit
-2-How are you?(3)
-3-Bye Bye.(0)
+1-<welcome-image.png>Welcome to the game.[1000]
+			     Choose action:(2)Continue(0)Exit
+2-के छ, खबर? (3)thik xa(4)birami \#xu
+3-Nice, Anyway I got to go.(5)
+4-get well soon.(0)
+5-Exiting.(0)
