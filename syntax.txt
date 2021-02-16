@@ -1,4 +1,7 @@
 * Game Story Syntax
+** Configuration options
+window size: is not specified then max widow side on the device.
+other things: think about later.
 ** Nodes
 First will be node number, which has to be unique integer.
 Node number 0 is reserved for exit.
