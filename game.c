@@ -278,18 +278,6 @@ GameState* read_file(char *filename) {
 }
 
 
-int execute_event(Event *e){
-  int i, /* j, */ choice;
-  for (i=0; i < e->actions_count; i++){
-    execute_action(e->actions+i);
-  }
-  choice = execute_choice(e->choices, e->choices_count);
-  if ((e->choices + choice)->target==0) exit_gracefully(0);
-  return (e->choices + choice)->target;
-}
-
-
-
 void print_between(char *start, char *end) {
   if (end == NULL || start > end){
     printf("\111[31mNULL\111[0m");

@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include "game.h"
 
+
+void execute_action(Action *a);
+
+int execute_choice(Choice *c, int len);
+
+int execute_event(Event *e);
+
+int execute_game(GameState *gs);
+
 int msleep(long msec){
     struct timespec ts;
     int res;
@@ -41,6 +50,16 @@ int execute_choice(Choice *c, int len){
   scanf("%d", &choice);
   if (choice == 0) exit_gracefully(0);
   return choice-1;
+}
+
+int execute_event(Event *e){
+  int i, /* j, */ choice;
+  for (i=0; i < e->actions_count; i++){
+    execute_action(e->actions+i);
+  }
+  choice = execute_choice(e->choices, e->choices_count);
+  if ((e->choices + choice)->target==0) exit_gracefully(0);
+  return (e->choices + choice)->target;
 }
 
 

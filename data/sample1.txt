@@ -1,9 +1,22 @@
-1-	<images/cc.bmp>
+10-	<images/bg.bmp>
 	Welcome to the game.
 	[1000]
-	Choose action:
-	       (2)Continue(0)Exit
-2-K xa? (3)thik xa(4)birami \#xu
-3-Nice, Anyway I got to go.(5)
-4-get well soon.(0)
-5-Exiting.(0)
+	This game is just a sample of what can be written
+	with this program.
+	You can just write a story in a text
+	file and then execute it.\n
+	This game is just a sample of what can be written
+	with this program.
+	You can just write a story in a text
+	file and then execute it.
+	\nThis game is just a sample of what can be written
+	with this program.
+	You can just write a story in a text
+	file and then execute it.
+	\nChoose action:
+	       (20)Continue(0)Exit
+20-    You have chosen to continue with the game. I have not written a long game.(21)
+21-    To continue, select from the following. (30)I'm feeling well.(40)I'm not feeling well.
+30-Nice, Anyway I got to go.(50)Continue
+40-get well soon.(0)Exit
+50-Exiting.(0)Exit

@@ -8,7 +8,7 @@
 #ifndef _GAME_DEF_H_
 #define _GAME_DEF_H_ 1
 
-#define DEBUG 1
+#define DEBUG 0
 
 enum action_type {
   SCENE_ACTION_UNDEFINED,
@@ -110,12 +110,5 @@ int _atoi(char *start, char *end);
 /* Exits the game gracefully. */
 void exit_gracefully(int exit_code);
 
-void execute_action(Action *a);
-
-int execute_choice(Choice *c, int len);
-
-int execute_event(Event *e);
-
-int execute_game(GameState *gs);
 
 #endif
