@@ -122,6 +122,12 @@ int read_action(char *buffer_start, int *point, char *buffer_end, Action *a) {
         skip_flag = 1;
         buff_pt++;
         break;
+      /* case '#': */
+      /* 	if (!skip_flag) { */
+      /* 	  while( *(++buff_pt) != '\n') */
+      /* 	    ; */
+      /* 	} */
+      /* 	break; */
       case '<':
       case '{':
       case '[':
@@ -241,6 +247,48 @@ void node_to_event(Node *n, Event *e) {
   }
 }
 
+void write_node_to_file(Node *n, FILE *fp){
+  fprintf(fp,"%d-",n->index);
+  char *c = n->text_start;
+  int skip_flag=0, ws_flag=0;
+  for (;c<=n->text_end;c++){
+    switch(*c){
+    case ' ':
+    case '\t':
+    case '\n':
+      if (!ws_flag){
+	fputc(' ', fp);
+	ws_flag = 1;
+      }
+      continue;
+    case '\\':
+      if (!skip_flag){
+	skip_flag = 1;
+	ws_flag = 0;
+	continue;
+      }
+      fputc('\\', fp);
+      fputc('\\', fp);
+      break;
+    case '#':
+    case 'n':
+      if (skip_flag){
+	fputc('\\', fp);
+      } else if (*c == '#'){
+	while (*(++c) != '\n');
+	ws_flag = 1;
+	continue;
+      }
+    default:
+      fputc(*c, fp);
+      ws_flag = 0;
+      skip_flag = 0;
+    }
+  }
+  fputc('\n', fp);
+}
+
+
 GameState* read_file(char *filename) {
   InputContent *game_content = malloc(sizeof(InputContent));
   game_content->filename = filename;
@@ -256,6 +304,7 @@ GameState* read_file(char *filename) {
   if (DEBUG) printf("Parsing Nodes:\n");
   while (
       read_node(game_content->filebuffer, &point, game_content->file_len, &n)) {
+    /* TODO: write to temp file here, and redo the reading to decrease total memory usage on runtime. */
     if (DEBUG) print_node(&n);
     game_content->node_len += 1;
   }
@@ -264,11 +313,14 @@ GameState* read_file(char *filename) {
   int i;
   GameState *gs = malloc(sizeof(GameState));
   gs->all_events = malloc(game_content->node_len * sizeof(Event));
+  FILE *fp = fopen("/tmp/t.txt", "w");
   for (i = 0; i < game_content->node_len; i++) {
     read_node(game_content->filebuffer, &point, game_content->file_len,
               game_content->nodes + i);
+    write_node_to_file(game_content->nodes+i, fp);
     node_to_event(game_content->nodes + i, gs->all_events+i);
   }
+  fclose(fp);
   free(game_content->nodes);
   fclose(game_content->fp);
   free(game_content);
@@ -283,7 +335,7 @@ void print_between(char *start, char *end) {
     printf("\111[31mNULL\111[0m");
     return;
   }
-  int whitespace_flag=0;
+  int whitespace_flag=0, skip_flag=0;
   while (start <= end) {
     if (*start == '\\'){
       start++;
@@ -297,9 +349,25 @@ void print_between(char *start, char *end) {
       whitespace_flag = 1;
       putc(' ', stdout);
       break;
+    case 'n':
+      if (skip_flag){
+	putc('\n', stdout);
+	whitespace_flag = 1;
+	skip_flag = 0;
+	break;
+      }
+      putc('n', stdout);
+      whitespace_flag = 0;
+      break;
+    case '\\':
+      if (!skip_flag){
+	skip_flag = 1;
+	break;
+      }
     default:
       putc(*start, stdout);
       whitespace_flag = 0;
+      skip_flag = 0;
     }
     start++;
   }
@@ -312,10 +380,9 @@ void print_node(Node *n) {
 }
 
 void print_action(Action *a) {
-  printf("ACTION: ");
   switch (a->type) {
   case SCENE_ACTION_UNDEFINED:
-    printf("UNDEFINED");
+    printf("UNDEFINED ACTION");
     break;
   case SCENE_ACTION_TEXT:
     printf("TEXT");
@@ -333,13 +400,27 @@ void print_action(Action *a) {
     printf("AUDIO");
     break;
   }
-  printf(" value=");
+  printf(" ");
   print_between(a->text_start, a->text_end);
   printf("\n");
 }
 
 void print_choice(Choice *c){
-  printf("\tCHOICE: Target=%d Text=", c->target);
+  printf("\t(%d) ", c->target);
   print_between(c->text_start, c->text_end);
   printf("\n");
+}
+
+void print_event(Event *e){
+  int i;
+  printf(" NODE: %d\n ACTIONS:\n", e->node);
+  for (i=0; i < e->actions_count; i++){
+    printf("  ");
+    print_action(e->actions+i);
+  }
+  printf(" CHOICES:\n");
+  for (i=0; i < e->choices_count; i++){
+    printf("  ");
+    print_choice(e->choices+i);
+  }
 }

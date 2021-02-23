@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -g
-LIBS = -lSDL2 -lSDL2_ttf -lSDL_image
+LIBS = -lSDL2 -lSDL2_ttf -lSDL2_image
 OBJ = game.o terminal.o gui.o
 
 all: terminal gui

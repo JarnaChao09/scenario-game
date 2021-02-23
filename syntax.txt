@@ -10,9 +10,17 @@ If image is to be change keep the image location inside <>.
 ** Story Text
 Write the texts normally you can also have newline characters. But not in the action texts.
 Any consecutive white spaces will be ignored. Feel free to use them to manage the story syntax.
-** Dynamic Text
+** Dynamic Text/Variables
+You can specify a number of dynamic texts and variables that the user can enter at the beginning of the game.
+The names of the Texts/Variables needs to be all caps. 
+
+It can be character's name, age, sex etc. For numerical values, you can assign a default values.
+Anything not assigned a default value is considered to be not numerical.
+
 You can have dynamic texts like character names and such. use them inside {}.
-If you want to specify the user to enter the dynamic variable enter it with $ character. inside braces {}.
+You can assign values, modify the numerical values and such in this. The evaluation result will be displayed in stead of the output, so if you want the evaluation but not to be output, end the expression with a semicolon.
+
+# NOTE: looks like I'm going to have to write a calculator for this, maybe I should really go towards a full-fledged parser now.
 ** Delay
 If you want delay between the texts insert number between [] like in the example below.
 The unit for delay is in milliseconds.

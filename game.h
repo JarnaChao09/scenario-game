@@ -71,6 +71,7 @@ typedef struct game_state {
   int events_count;
   Event *all_events;
   Event *current_event;
+  int current_action_index;
   Event **next_events;
   /* add others later */
 } GameState;
@@ -97,6 +98,9 @@ void print_choice(Choice *c);
 
 /* Print the action to the screen. */
 void print_action(Action *a);
+
+
+void print_event(Event *e);
 
 /* Read the action from the buffer and move the cursor. */
 int read_action(char *buffer_start, int *point, char *buffer_end, Action *a);
