@@ -110,7 +110,7 @@ struct expression *new_expression(struct expression *parent){
   return e;
 }
 
-int process_text(char *text, struct expression *exp){
+int process_text(char *text, struct expression *exp, int paren_exit){
   if (*text == '\0'){
     return 0;
   }
@@ -120,27 +120,67 @@ int process_text(char *text, struct expression *exp){
     *add_exp = exp;
   char *c = text;
   double num = 0;
-  union branch temp_br;
-  int dec_flag=0, loop_flag=1, add_flag=1, nest_flag=0;
+  /* union branch temp_br; */
+  int num_flag=0, dec_flag=0, loop_flag=1, add_flag=1, nest_flag=0, paren_flag=0;
   enum reading_mode rm=READING_LEFT_NUMBER;
+  if (*c == '('){
+    paren_flag = 1;
+    c++;
+  }
   while(loop_flag){
     switch(*c){
+    case '(':
+      /* temp_exp = new_expression(curr_exp); */
+      /* c += process_text(c, temp_exp, 1); */
+      /* print_exp(temp_exp); */
+      if (num_flag){
+	printf("num");
+      }else{
+	if (rm == READING_LEFT_NUMBER){
+	  curr_exp->left.exp = new_expression(curr_exp);
+	  curr_exp->branch_flags &= ~LEFT_EVALUATED;
+	  c += process_text(c, curr_exp->left.exp, 1);
+	  rm = READING_OPERATOR;
+	}
+      }
+      break;
+    case ')':
+      if (!paren_flag){
+	printf("Unmatched brackets.\n");
+	return 0;
+      }
     case '\0':
     case ';':
-      if (rm == READING_LEFT_NUMBER) return 0;
-      curr_exp->right.value = num;
-      curr_exp->branch_flags |= RIGHT_EVALUATED;
-      return c-text;
+      if (rm == READING_LEFT_NUMBER){
+	curr_exp->left.value = num;
+	curr_exp->branch_flags = BOTH_EVALUATED;
+	curr_exp->right.value = 0;
+	curr_exp->operator = '+';
+      } else {
+	curr_exp->right.value = num;
+	curr_exp->branch_flags |= RIGHT_EVALUATED;
+      }
+      if (!paren_exit && paren_flag){
+	rm = READING_OPERATOR;
+	break;
+      }else{
+	return c-text;
+      }
     case ' ':
     case '_':
     case '\t':
     case '\n':
       break;
     case '0' ... '9':
+      if (rm == READING_OPERATOR){
+	curr_exp->operator = '*';
+	rm = READING_RIGHT_NUMBER;
+      }
       if (dec_flag>0)
 	num += (*c - '0') * 1.0 / pow(10, dec_flag++);
       else
 	num = num * 10 + (*c - '0');
+      num_flag = 1;
       break;
     case '.':
       if (dec_flag){
@@ -151,7 +191,9 @@ int process_text(char *text, struct expression *exp){
       break;
     case '+':
     case '-':
-      if (rm == READING_LEFT_NUMBER) {
+      if (rm == READING_OPERATOR){
+	break;
+      }else if (rm == READING_LEFT_NUMBER) {
         curr_exp->left.value = num;
 	curr_exp->branch_flags |= LEFT_EVALUATED;
       }else if(add_flag){
@@ -182,11 +224,14 @@ int process_text(char *text, struct expression *exp){
       rm = READING_RIGHT_NUMBER;
       add_flag = 1;
       num = 0;
+      num_flag = 0;
       dec_flag = 0;
       break;
     case '*':
     case '/':
-      if (rm == READING_LEFT_NUMBER) {
+      if (rm == READING_OPERATOR){
+	break;
+      }else if (rm == READING_LEFT_NUMBER) {
         curr_exp->left.exp = new_expression(curr_exp);
 	curr_exp->branch_flags &= ~LEFT_EVALUATED;
         curr_exp->left.exp->left.value = num;
@@ -215,6 +260,7 @@ int process_text(char *text, struct expression *exp){
 	nest_flag = 1;
       }
       num = 0;
+      num_flag = 0;
       dec_flag = 0;
       add_flag = 0;
       break;
@@ -248,7 +294,9 @@ double eval_string(char *text){
   double value;
   if (!is_num(text, &value)){
     br.exp = new_expression(NULL);
-    process_text(text, br.exp);
+    process_text(text, br.exp, 0);
+    print_exp(br.exp);
+    printf("\n");
     value = evaluate(br.exp, 1);
   }
   return value;

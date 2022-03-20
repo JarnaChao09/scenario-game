@@ -1,0 +1,12 @@
+100- <images/cc.png>
+     Welcome traveler,\n
+     This area is dangerous, wearing simple cloths like that I doubt you could
+     survive, can I interest you to buy armors from my shop?
+     (200) Yes, I'd like to buy some. (300)No, I'd like to pass.
+200- Thank you.\n
+     We have a myriad of selection of armors, and I'd like to assign someone to you right now so that you can choose a armor most suitable for you.(210)
+210- You Live(220)
+220- Now you die bitch.(0)
+
+300- Oh, No problem. But it is really wise to buy some, but if you don't have some money you could look for the jobs in the village before passing through the mountains. Feel free to return here if you want to in the future. (310)
+310- You died(0)

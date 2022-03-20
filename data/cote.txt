@@ -1,0 +1,12 @@
+1000- <images/kiyokei.png>
+      Welcome,
+      This game is a simple text based VN style game.
+      [1000]
+      <images/cc.png>
+      Do you want to continue playing this game?
+      (2000) Yes. (0) No.
+2000- Thank you for choosing to continue the game.(3000)
+3000- There is nothing here so, return back later ok?\n
+      Hopefully there will be a good story, and good graphics by the time you return here.
+      I'm looking forward to it. (0)
+      
