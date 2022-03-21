@@ -1,22 +1,23 @@
 CC = gcc
 CFLAGS = -Wall -g
 LIBS = -lSDL2 -lSDL2_ttf -lSDL2_image -lm
-OBJ = game.o terminal.o gui.o calc.o
+OBJ = lib/game.o lib/terminal.o lib/gui.o lib/calc.o
 
 all: terminal gui
 
 %.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) $(LIBS) -c -o $@ $<
 
-terminal: terminal.o game.o game.h
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $^
+terminal: lib/terminal.o lib/game.o game.h
+	$(CC) $(CFLAGS) $(LIBS) -o bin/$@ $^
 
-gui: gui.o game.o game.h
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $^
+gui: lib/gui.o lib/game.o game.h
+	$(CC) $(CFLAGS) $(LIBS) -o bin/$@ $^
 
-calc: calc.o
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $^	
+calc: lib/calc.o
+	$(CC) $(CFLAGS) $(LIBS) -o bin/$@ $^	
 
 clean:
-	-rm *.o terminal gui
+	-rm lib/*.o
+	-rm bin/*
 
