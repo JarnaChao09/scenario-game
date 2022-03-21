@@ -227,7 +227,7 @@ void node_to_event(Node *n, Event *e) {
     if (DEBUG) print_action(&act);
     e->actions_count += 1;
   }
-  e->actions = malloc(e->actions_count * sizeof(Action));
+  e->actions = (Action*)malloc(e->actions_count * sizeof(Action));
   i = 0;
   int count;
   for (count=0; count < e->actions_count; count++){
@@ -240,7 +240,7 @@ void node_to_event(Node *n, Event *e) {
     if (DEBUG) print_choice(&ch);
     e->choices_count += 1;
   }
-  e->choices = malloc(e->choices_count * sizeof(Choice));
+  e->choices = (Choice*)malloc(e->choices_count * sizeof(Choice));
   i = i2;
   for (count=0; count < e->choices_count; count++){
     read_choice(n->text_start, &i, n->text_end, e->choices+count);
@@ -290,7 +290,7 @@ void write_node_to_file(Node *n, FILE *fp){
 
 
 GameState* read_file(char *filename) {
-  InputContent *game_content = malloc(sizeof(InputContent));
+  InputContent *game_content = (InputContent*)malloc(sizeof(InputContent));
   game_content->filename = filename;
   game_content->fp = fopen(filename, "r");
   getdelim(&game_content->filebuffer, &game_content->file_len, '\0',
@@ -309,10 +309,10 @@ GameState* read_file(char *filename) {
     game_content->node_len += 1;
   }
   point = 0;
-  game_content->nodes = malloc(game_content->node_len * sizeof(Node));
+  game_content->nodes = (Node*)malloc(game_content->node_len * sizeof(Node));
   int i;
-  GameState *gs = malloc(sizeof(GameState));
-  gs->all_events = malloc(game_content->node_len * sizeof(Event));
+  GameState *gs = (GameState*)malloc(sizeof(GameState));
+  gs->all_events = (Event*)malloc(game_content->node_len * sizeof(Event));
   FILE *fp = fopen("/tmp/t.txt", "w");
   for (i = 0; i < game_content->node_len; i++) {
     read_node(game_content->filebuffer, &point, game_content->file_len,
