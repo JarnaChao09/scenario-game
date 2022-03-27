@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 project(scenario-game)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(/opt/homebrew/include)
 
 add_library(scenario SHARED src/scenario.c)
 add_library(calc STATIC src/calc.c)
