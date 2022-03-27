@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/cc  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/game.dir/src/gui.c.o -o game  -Wl,-rpath,/Users/wukong/Projects/Random/scenario-game/build libscenario.dylib -lSDL2 -lSDL2_ttf -lSDL2_image 

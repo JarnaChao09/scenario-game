@@ -1,0 +1,6 @@
+/Users/wukong/Projects/Random/scenario-game/build/CMakeFiles/scenario.dir
+/Users/wukong/Projects/Random/scenario-game/build/CMakeFiles/calc.dir
+/Users/wukong/Projects/Random/scenario-game/build/CMakeFiles/game.dir
+/Users/wukong/Projects/Random/scenario-game/build/CMakeFiles/game-cli.dir
+/Users/wukong/Projects/Random/scenario-game/build/CMakeFiles/edit_cache.dir
+/Users/wukong/Projects/Random/scenario-game/build/CMakeFiles/rebuild_cache.dir

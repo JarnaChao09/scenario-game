@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/cc  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/game-cli.dir/src/terminal.c.o -o game-cli  -Wl,-rpath,/Users/wukong/Projects/Random/scenario-game/build libscenario.dylib 
