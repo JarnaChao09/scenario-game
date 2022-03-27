@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <strings.h>
 
-#include "game.h"
+#include "scenario.h"
 
 #define TEXT_OFFSET 7
 

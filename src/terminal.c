@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "game.h"
+#include "scenario.h"
 
 
 void execute_action(Action *a);

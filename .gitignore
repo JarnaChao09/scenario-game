@@ -86,3 +86,8 @@ Temporary Items
 .apdisk
 
 # End of https://www.toptal.com/developers/gitignore/api/c,macos
+
+*.out
+*.o
+bin/
+lib/
