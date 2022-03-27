@@ -1,4 +1,4 @@
-#include "game.h"
+#include "scenario.h"
 
 void exit_gracefully(int code){
   printf("Bye Bye.\n");
